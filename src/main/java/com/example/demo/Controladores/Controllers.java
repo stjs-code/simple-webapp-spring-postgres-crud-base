@@ -1,4 +1,5 @@
 package com.example.demo.Controladores;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api")
 public class Controllers {
 
+    private final UserRepository Repository;
+    public Controllers(UserRepository Repository) {
+        this.Repository = Repository;
+    }
+
     @PostMapping("/")
     public ResponseEntity<?> Post(@RequestBody DTOUser entity) {
         if (entity.getName() == null || entity.getName().trim().isEmpty() || entity.getName().length() > 20) {
@@ -29,7 +35,13 @@ public class Controllers {
                     .badRequest()
                     .body("Error: la contraseña no debe estar vacia ni ser mayor a 12 caracteres");
         }
-        return ResponseEntity.ok("Guardado");
+
+        User db = new User();
+        db.setName(entity.getName());
+        db.setPassword(entity.getPassword());
+
+        User id = Repository.save(db);
+        return ResponseEntity.ok("Guardado con ID: " + id.getId());
     }
 
     @GetMapping("/")
