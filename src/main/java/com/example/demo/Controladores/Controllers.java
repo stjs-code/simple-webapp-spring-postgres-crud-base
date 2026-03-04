@@ -1,16 +1,14 @@
 package com.example.demo.Controladores;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -62,6 +60,30 @@ public class Controllers {
         return Repository.findById(id)
             .map(user -> ResponseEntity.ok(user))
             .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody DTOUser entity) {
+    return Repository.findById(id).map(user -> {
+        
+        if (entity.getName() == null || entity.getName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("El nombre no puede estar vacío");
+        }
+        
+        user.setName(entity.getName());
+        user.setPassword(entity.getPassword());
+        Repository.save(user);
+        return ResponseEntity.ok("Usuario actualizado con éxito");
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+    if (!Repository.existsById(id)) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El ID " + id + " no existe.");
+    }
+        Repository.deleteById(id);
+        return ResponseEntity.ok("Usuario eliminado correctamente");
     }
     
 }

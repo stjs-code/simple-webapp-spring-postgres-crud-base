@@ -1,3 +1,1 @@
-Este es un pequeño experimento que aun no esta terminado,
-en este busco experimentar creando un CRUD basico para usuarios
-en una aplicacion con SpringBoot usando PostgreSQL.
+Este es un avance sobre mis estudios de Spring y Springboot con java, En el que hice un CRUD basico sobre una API, No considero como tal que sea un MVC completo ya que no hay ninguna vista mas que ResponseEntity's, Agradezco tu lectura y tu revision, Estoy muy seguro que con el tiempo ire mejorando y que aunque no sea perfecto mi codigo, Busco en lo posible de entenderlo.
